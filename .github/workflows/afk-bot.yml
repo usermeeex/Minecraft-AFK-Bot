@@ -13,46 +13,16 @@ jobs:
     timeout-minutes: 350
 
     steps:
-      - name: Download repository
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
         with:
           node-version: "22"
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Configure bot
-        env:
-          MC_SERVER_HOST: ${{ secrets.MC_SERVER_HOST }}
-          MC_SERVER_PORT: ${{ secrets.MC_SERVER_PORT }}
-          MC_BOT_USERNAME: ${{ secrets.MC_BOT_USERNAME }}
-          MC_BOT_CHUNK: ${{ secrets.MC_BOT_CHUNK }}
-        run: |
-          node <<'NODE'
-          const fs = require('fs');
-
-          const host = process.env.MC_SERVER_HOST;
-          const port = Number(process.env.MC_SERVER_PORT);
-          const username = process.env.MC_BOT_USERNAME;
-          const chunk = Number(process.env.MC_BOT_CHUNK || 4);
-
-          if (!host || !username ||
-              !Number.isInteger(port) || port < 1 || port > 65535 ||
-              !Number.isInteger(chunk) || chunk < 1 || chunk > 6) {
-            console.error('Missing or invalid repository secrets.');
-            process.exit(1);
-          }
-
-          fs.writeFileSync('config.json', JSON.stringify({
-            serverHost: host,
-            serverPort: port,
-            botUsername: username,
-            botChunk: chunk
-          }, null, 2));
-          NODE
-
-      - name: Start bot
-        run: npm start
+      - name: Start AFK bot
+        run: node bot.js
