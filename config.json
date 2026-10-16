@@ -1,6 +1,6 @@
 {
   "serverHost": "kawai-smp.aternos.me",
-  "serverPort": 19108,
+  "serverPort": "19108",
   "botUsername": "KALONIGGABOT",
   "botChunk": 1
 }
